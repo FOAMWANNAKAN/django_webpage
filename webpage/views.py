@@ -14,10 +14,31 @@ def contact(request):
     return render(request, 'contact.html')
 
 def card(request):
-    return render(request, 'card.html')
+    cards = []
+    base_url = 'https://image.thepeople.co/uploads/images/contents/w1024/2024/03/gqwrPwkaj9O7pqBglQ5g.webp?x-image-process=style/lg-webp'
+    
+    for i in range(1, 101):
+        image_url = f'{base_url}&{i}'
+        card = {
+            'image_url': image_url,
+            'link': f'#card-{i}'
+        }
+        cards.append(card)
+
+    context = {
+        'cards': cards
+    }
+    return render(request, 'card.html', context)
 
 def cardcolor(request):
-    return render(request, 'cardcolor.html')
+    context = {
+        'color': 'All',
+    }
+
+    if request.method == "GET" and request.GET.get('color') != None:
+        context['color'] = request.GET.get('color')
+
+    return render(request, 'cardcolor.html', context)
 
 def form(request):
     return render(request, 'form.html')

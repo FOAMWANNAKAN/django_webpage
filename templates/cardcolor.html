@@ -1,6 +1,57 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    การ์ดสี
-{% endblock %}
+{% block content %}
 
+<div class="container mt-4">
+  <h1 class="text-center">{{ color }}</h1>
+  
+  <!-- ตัวกรองสี -->
+  <div class="row mb-4">
+    <div class="col text-center">
+        <a class="btn btn-secondary text-light" href="?color=All">ทั้งหมด</a>
+        <a class="btn btn-warning text-dark mx-2" href="?color=Yellow">สีเหลือง</a>
+        <a class="btn btn-info text-dark mx-2" href="?color=Light Blue">สีฟ้า</a>
+        <a class="btn btn-dark text-light mx-2" href="?color=Dark">สีดำ</a>
+    </div>
+  </div>
+
+  <!-- การแสดงการ์ด -->
+  <div class="row">
+    {% if color == 'All' or color == 'Yellow' %}
+    <div class="col-md-4 mb-4">
+      <div class="card bg-warning text-dark">
+        <div class="card-header bg-warning text-dark text-center">สีเหลือง</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning Card Title</h5>
+          <p class="card-text text-dark">This is a yellow card with some quick example text to build on the card title.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
+    {% if color == 'All' or color == 'Light Blue' %}
+    <div class="col-md-4 mb-4">
+      <div class="card bg-info text-dark">
+        <div class="card-header bg-info text-dark text-center">สีฟ้า</div>
+        <div class="card-body">
+          <h5 class="card-title text-dark">Info Card Title</h5>
+          <p class="card-text text-dark">This is a light blue card with some quick example text to build on the card title.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if color == 'All' or color == 'Dark' %}
+    <div class="col-md-4 mb-4">
+      <div class="card bg-dark text-light">
+        <div class="card-header bg-dark text-light text-center">สีดำ</div>
+        <div class="card-body">
+          <h5 class="card-title text-light">Dark Card Title</h5>
+          <p class="card-text text-light">This is a dark card with some quick example text to build on the card title.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+{% endblock %}

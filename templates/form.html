@@ -1,5 +1,170 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    แบบฟอร์มลงทะเบียน
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="container-fluid px-4">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-lg">
+                        <div class="card-body">
+                            <h2 class="card-title text-center mb-4">แบบฟอร์มลงทะเบียน</h2>
+                            <form @submit.prevent="submitForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label">ชื่อ</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="firstName"
+                                            v-model="form.firstName"
+                                            :class="{ 'is-invalid': !validation.firstName }"
+                                            required
+                                        >
+                                        <div class="invalid-feedback">กรุณากรอกชื่อ</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">นามสกุล</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="lastName"
+                                            v-model="form.lastName"
+                                            :class="{ 'is-invalid': !validation.lastName }"
+                                            required
+                                        >
+                                        <div class="invalid-feedback">กรุณากรอกนามสกุล</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">อีเมล</label>
+                                        <input
+                                            type="email"
+                                            class="form-control"
+                                            id="email"
+                                            v-model="form.email"
+                                            :class="{ 'is-invalid': !validation.email }"
+                                            required
+                                        >
+                                        <div class="invalid-feedback">กรุณากรอกอีเมลที่ถูกต้อง</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="address" class="form-label">ที่อยู่</label>
+                                        <textarea
+                                            class="form-control"
+                                            id="address"
+                                            v-model="form.address"
+                                            :class="{ 'is-invalid': !validation.address }"
+                                            rows="3"
+                                            required
+                                        ></textarea>
+                                        <div class="invalid-feedback">กรุณากรอกที่อยู่</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">เบอร์โทรศัพท์</label>
+                                        <input
+                                            type="tel"
+                                            class="form-control"
+                                            id="phone"
+                                            v-model="form.phone"
+                                            :class="{ 'is-invalid': !validation.phone }"
+                                            required
+                                        >
+                                        <div class="invalid-feedback">กรุณากรอกเบอร์โทรศัพท์ที่ถูกต้อง (10 หลัก)</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="birthdate" class="form-label">วันเดือนปีเกิด</label>
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            id="birthdate"
+                                            v-model="form.birthdate"
+                                            :class="{ 'is-invalid': !validation.birthdate }"
+                                            required
+                                        >
+                                        <div class="invalid-feedback">กรุณาเลือกวันเดือนปีเกิด</div>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-primary w-100">ลงทะเบียน</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      </template>
+      
+      <script>
+      export default {
+        data() {
+          return {
+            form: {
+              firstName: '',
+              lastName: '',
+              email: '',
+              address: '',
+              phone: '',
+              birthdate: ''
+            },
+            validation: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              address: true,
+              phone: true,
+              birthdate: true
+            }
+          }
+        },
+        methods: {
+          validateForm() {
+            this.validation.firstName = this.form.firstName.trim() !== ''
+            this.validation.lastName = this.form.lastName.trim() !== ''
+            this.validation.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)
+            this.validation.address = this.form.address.trim().length >= 10
+            this.validation.phone = /^[0-9]{10}$/.test(this.form.phone)
+            this.validation.birthdate = this.isValidDate(this.form.birthdate)
+      
+            return Object.values(this.validation).every(v => v === true)
+          },
+          isValidDate(dateString) {
+            const date = new Date(dateString)
+            return date instanceof Date && !isNaN(date) && date < new Date()
+          },
+          submitForm() {
+            if (this.validateForm()) {
+              // ส่งข้อมูลไปยังเซิร์ฟเวอร์หรือดำเนินการต่อไป
+              console.log('Form submitted:', this.form)
+              alert('ลงทะเบียนสำเร็จ!')
+            } else {
+              alert('กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน')
+            }
+          }
+        }
+      }
+      </script>
+      
+      <style scoped>
+      .card {
+        border-radius: 15px;
+      }
+      .card-title {
+        color: #2653e9;
+      }
+      .form-control:focus {
+        border-color: #2653e9;
+        box-shadow: 0 0 0 0.2rem rgba(0, 89, 255, 0.25);
+      }
+      .btn-primary {
+        background-color: #2653e9;
+        border-color: #2653e9;
+      }
+      .btn-primary:hover {
+        background-color: #2653e9;
+        border-color: #2653e9;
+      }
+      </style>
+    <div>
 {% endblock %}

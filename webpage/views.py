@@ -43,6 +43,57 @@ def cardcolor(request):
 def form(request):
     return render(request, 'form.html')
 
+@csrf_exempt
+def submit_registration(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # ตรวจสอบความถูกต้องของข้อมูล
+            if not all([data.get('firstName'), data.get('lastName'), data.get('email'), 
+                        data.get('address'), data.get('phone'), data.get('birthdate')]):
+                return JsonResponse({'status': 'error', 'message': 'กรุณากรอกข้อมูลให้ครบถ้วน'})
+            
+            # ตรวจสอบรูปแบบอีเมล
+            if '@' not in data['email']:
+                return JsonResponse({'status': 'error', 'message': 'รูปแบบอีเมลไม่ถูกต้อง'})
+            
+            # ตรวจสอบความยาวของที่อยู่
+            if len(data['address']) < 10:
+                return JsonResponse({'status': 'error', 'message': 'ที่อยู่ต้องมีความยาวอย่างน้อย 10 ตัวอักษร'})
+            
+            # ตรวจสอบรูปแบบเบอร์โทรศัพท์
+            if not data['phone'].isdigit() or len(data['phone']) != 10:
+                return JsonResponse({'status': 'error', 'message': 'เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก'})
+            
+            # ตรวจสอบวันเกิด
+            try:
+                birthdate = datetime.strptime(data['birthdate'], '%Y-%m-%d')
+                if birthdate > datetime.now():
+                    return JsonResponse({'status': 'error', 'message': 'วันเกิดไม่ถูกต้อง'})
+            except ValueError:
+                return JsonResponse({'status': 'error', 'message': 'รูปแบบวันเกิดไม่ถูกต้อง'})
+            
+            # บันทึกข้อมูลลงในฐานข้อมูล
+            user = User(
+                first_name=data['firstName'],
+                last_name=data['lastName'],
+                email=data['email'],
+                address=data['address'],
+                phone=data['phone'],
+                birthdate=birthdate
+            )
+            user.save()
+            
+            return JsonResponse({'status': 'success', 'message': 'บันทึกข้อมูลเรียบร้อยแล้ว'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON format'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
 def forpage(request):
     context = {}
     lt = list(range(1, 101))

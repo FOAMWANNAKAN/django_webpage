@@ -11279,3 +11279,7 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+.hero-box {
+  border-radius: 1rem; /* ปรับค่าให้มุมโค้งมนตามต้องการ */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้กับกรอบ */
+}
